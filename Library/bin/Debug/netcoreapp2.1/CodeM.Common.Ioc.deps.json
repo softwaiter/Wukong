@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "CodeM.Common.Ioc/1.0.0": {
+        "dependencies": {
+          "CodeM.Common.Tools": "1.0.0.0"
+        },
+        "runtime": {
+          "CodeM.Common.Ioc.dll": {}
+        }
+      },
+      "CodeM.Common.Tools/1.0.0.0": {
+        "runtime": {
+          "CodeM.Common.Tools.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CodeM.Common.Ioc/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CodeM.Common.Tools/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

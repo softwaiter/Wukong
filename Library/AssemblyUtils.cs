@@ -33,14 +33,17 @@ namespace CodeM.Common.Ioc
 
         private static bool HasType(Assembly assembly, string classFullName)
         {
-            IEnumerable<Type> exportedTypes = assembly.ExportedTypes;
-            IEnumerator<Type> typesIterator = exportedTypes.GetEnumerator();
-            while (typesIterator.MoveNext())
+            if (!assembly.IsDynamic)
             {
-                if (typesIterator.Current.FullName.Equals(classFullName, 
-                    StringComparison.OrdinalIgnoreCase))
+                IEnumerable<Type> exportedTypes = assembly.ExportedTypes;
+                IEnumerator<Type> typesIterator = exportedTypes.GetEnumerator();
+                while (typesIterator.MoveNext())
                 {
-                    return true;
+                    if (typesIterator.Current.FullName.Equals(classFullName,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -54,14 +57,14 @@ namespace CodeM.Common.Ioc
                 searchDirs.AddRange(sSearchPath);
             }
 
-            bool abc;
+            bool loadedAssemblyObj;
             foreach (string dir in searchDirs)
             {
                 IEnumerable<string> dllFiles = Directory.EnumerateFiles(dir, "*.dll", SearchOption.AllDirectories);
                 IEnumerator<string> fileIterator = dllFiles.GetEnumerator();
                 while (fileIterator.MoveNext()) {
                     string filename = fileIterator.Current.ToLower();
-                    if (!sLoadedAssemblies.TryGetValue(filename, out abc))
+                    if (!sLoadedAssemblies.TryGetValue(filename, out loadedAssemblyObj))
                     {
                         Assembly assembly = Assembly.LoadFrom(filename);
                         sLoadedAssemblies.TryAdd(filename, true);
@@ -99,7 +102,21 @@ namespace CodeM.Common.Ioc
             return result;
         }
 
-        public static object CreateInstance(string classFullName, bool ignoreCase = false)
+        public static Type GetType(string typeFullName)
+        {
+            Assembly assembly = GetAssemblyByClassFullName(typeFullName);
+            if (assembly == null)
+            {
+                assembly = FindAssemblyInSearchPath(typeFullName);
+            }
+            if (assembly != null)
+            {
+                return assembly.GetType(typeFullName, true, true);
+            }
+            return null;
+        }
+
+        public static object CreateInstance(string classFullName, bool ignoreCase = true)
         {
             object result = null;
             Assembly assembly = GetAssemblyByClassFullName(classFullName);
@@ -110,6 +127,28 @@ namespace CodeM.Common.Ioc
             if (assembly != null)
             {
                 result = assembly.CreateInstance(classFullName, ignoreCase);
+            }
+            return result;
+        }
+
+        public static object CreateInstance(string classFullName, object[] args = null)
+        {
+            object result = null;
+            Assembly assembly = GetAssemblyByClassFullName(classFullName);
+            if (assembly == null)
+            {
+                assembly = FindAssemblyInSearchPath(classFullName);
+            }
+            if (assembly != null)
+            {
+                if (args == null || args.Length == 0)
+                {
+                    result = assembly.CreateInstance(classFullName, true);
+                }
+                else
+                {
+                    result = assembly.CreateInstance(classFullName, true, BindingFlags.CreateInstance, null, args, null, null);
+                }
             }
             return result;
         }

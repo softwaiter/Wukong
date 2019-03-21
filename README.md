@@ -1,8 +1,7 @@
 # .netcore 轻量级IOC容器
 ---
 
-<br>
-###一、添加程序集搜索路径（默认只在应用执行目录中搜索）
+### 一、添加程序集搜索路径（默认只在应用执行目录中搜索）
 ####定义：
 public static void AddSearchPath(string path)
 #### 参数：

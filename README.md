@@ -39,7 +39,7 @@ args: 对象构造参数数组。
 
 ### 五、根据类全名称获取指定类型的对象实例
 #### 定义：
-public static T GetObject<T>(string classFullName, params object[] args)
+public static T GetObject&lt;T&gt;(string classFullName, params object[] args)
 #### 参数：
 classFullName: 类全名称。
 <br>
@@ -59,7 +59,7 @@ args: 对象构造参数数组。
 
 ### 七、以单例模式根据类全名称获取指定类型的对象实例
 #### 定义：
-public static T GetSingleObject<T>(string classFullName, params object[] args)
+public static T GetSingleObject&lt;T&gt;(string classFullName, params object[] args)
 #### 参数：
 classFullName: 类全名称。
 <br>
@@ -77,7 +77,7 @@ objectId: 配置文件中对象Id
 
 ### 九、根据配置文件Id获取指定类型对象实例
 #### 定义：
-public static T GetObjectById<T>(string objectId)
+public static T GetObjectById&lt;T&gt;(string objectId)
 #### 参数：
 objectId: 配置文件中对象Id
 #### 返回：
@@ -93,7 +93,7 @@ objectId: 配置文件中对象Id
 
 ### 十一、以单例模式根据配置文件Id获取指定类型的对象实例
 #### 定义：
-public static T GetSingleObjectById<T>(string objectId)
+public static T GetSingleObjectById&lt;T&gt;(string objectId)
 #### 参数：
 objectId: 配置文件中对象Id
 #### 返回：

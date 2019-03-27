@@ -281,11 +281,14 @@ namespace CodeM.Common.Ioc
                         }
 
                         //Hashtable a = new Hashtable();
-                        //Dictionary<string, string> b = new Dictionary<string, string>();
-                        //HashSet<int> c = new HashSet<int>();
 
-                        //HashSet
-                        //Hashtable
+                        //IDictionary aaa;
+                        //Dictionary<string, string> b = new Dictionary<string, string>();
+                        ////HashSet<int> c = new HashSet<int>();
+
+                        ////HashSet
+                        //Hashtable a = Hashtable.Synchronized(new Hashtable());
+                        //aaa = a;
                     }
                     else if (nodeInfo.Path == "/objects/object/constructor-arg/list" ||
                             nodeInfo.Path == "/objects/object/constructor-arg/array")

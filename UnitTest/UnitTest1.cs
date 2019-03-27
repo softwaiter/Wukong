@@ -17,22 +17,32 @@ namespace UnitTest
             IocUtils.AddSearchPath(di.FullName);
 
             object a = IocUtils.GetObject("TestLibrary.Person");
+            Assert.IsNotNull(a);
             Console.WriteLine("a: " + a);
 
             object b = IocUtils.GetObject("TestLibrary.Person", "张三");
+            Assert.IsNotNull(b);
             Console.WriteLine("b: " + b);
 
             object c = IocUtils.GetObject("TestLibrary.Person", "张三", true);
+            Assert.IsNotNull(c);
             Console.WriteLine("c: " + c);
 
             object d = IocUtils.GetObject("TestLibrary.Person", "张三", (Int16)18, true);
+            Assert.IsNotNull(d);
             Console.WriteLine("d: " + d);
 
             IocUtils.RemoveSearchPath(di.FullName);
         }
 
-        [TestMethod]
-        public void BuildByConfigId()
+        [DataTestMethod]
+        [DataRow("aaa")]
+        [DataRow("bbb")]
+        [DataRow("ccc")]
+        [DataRow("ddd")]
+        [DataRow("eee")]
+        [DataRow("fff")]
+        public void BuildByConfigId(string objectId)
         {
             string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp2.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
@@ -42,29 +52,18 @@ namespace UnitTest
             string config = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\ioc.xml");
             IocUtils.LoadConfig(config);
 
-            object aaa = IocUtils.GetObjectById("aaa");
-            Console.WriteLine("aaa: " + aaa);
+            object obj = IocUtils.GetObjectById(objectId);
+            Assert.IsNotNull(obj);
 
-            object bbb = IocUtils.GetObjectById("bbb");
-            Console.WriteLine("bbb: " + bbb);
-
-            object ccc = IocUtils.GetObjectById("ccc");
-            Console.WriteLine("ccc: " + ccc);
-
-            object ddd = IocUtils.GetObjectById("ddd");
-            Console.WriteLine("ddd: " + ddd);
-
-            object eee = IocUtils.GetObjectById("eee");
-            Console.WriteLine("eee: " + eee);
-
-            object fff = IocUtils.GetObjectById("fff");
-            Console.WriteLine("fff: " + fff);
+            Console.WriteLine(objectId + ": " + obj);
 
             IocUtils.RemoveSearchPath(di.FullName);
         }
 
-        [TestMethod]
-        public void BuildByConfigIdWithObjectReference()
+        [DataTestMethod]
+        [DataRow("ggg")]
+        [DataRow("hhh")]
+        public void BuildByConfigIdWithObjectReference(string objectId)
         {
             string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp2.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
@@ -74,11 +73,10 @@ namespace UnitTest
             string config = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\ioc.xml");
             IocUtils.LoadConfig(config);
 
-            object ggg = IocUtils.GetObjectById("ggg");
-            Console.WriteLine("ggg: " + ggg);
+            object obj = IocUtils.GetObjectById(objectId);
+            Assert.IsNotNull(obj);
 
-            object hhh = IocUtils.GetObjectById("hhh");
-            Console.WriteLine("hhh: " + hhh);
+            Console.WriteLine(objectId + ": " + obj);
 
             IocUtils.RemoveSearchPath(di.FullName);
         }

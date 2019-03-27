@@ -1,9 +1,0 @@
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\obj\Debug\netcoreapp2.1\TestLibrary.csproj.CoreCompileInputs.cache
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\obj\Debug\netcoreapp2.1\TestLibrary.AssemblyInfoInputs.cache
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\obj\Debug\netcoreapp2.1\TestLibrary.AssemblyInfo.cs
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\bin\Debug\netcoreapp2.1\TestLibrary.deps.json
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\bin\Debug\netcoreapp2.1\TestLibrary.dll
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\bin\Debug\netcoreapp2.1\TestLibrary.pdb
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\obj\Debug\netcoreapp2.1\TestLibrary.dll
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\obj\Debug\netcoreapp2.1\TestLibrary.pdb
-C:\Users\wangxm\source\repos\github\ioc\netcoreIoc\TestLibrary\obj\Debug\netcoreapp2.1\TestLibrary.csprojAssemblyReference.cache

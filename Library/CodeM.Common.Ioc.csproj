@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="CodeM.Common.Tools">
-      <HintPath>libs\CodeM.Common.Tools.dll</HintPath>
-    </Reference>
+    <PackageReference Include="CodeM.Common.Tools" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

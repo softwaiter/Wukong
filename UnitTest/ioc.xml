@@ -58,5 +58,11 @@
             </array>
         </constructor-arg>
     </object>
-  
+
+    <object id="iii" class="TestLibrary.Person">
+        <property name="name">王小明</property>
+        <property name="age">18</property>
+        <property name="isperson">true</property>
+    </object>
+
 </objects>

@@ -78,11 +78,44 @@ namespace CodeM.Common.Ioc
             }
         }
 
+        internal class PropertySetting
+        {
+            public PropertySetting(string name)
+            {
+                this.Name = name;
+            }
+
+            public PropertySetting(string name, object value)
+                : this(name)
+            {
+                this.Value = value;
+            }
+
+            public string Name
+            {
+                get;
+                set;
+            }
+
+            public object Value
+            {
+                get;
+                set;
+            }
+
+            public string RefId
+            {
+                get;
+                set;
+            }
+        }
+
         //对象配置信息解析存储
         internal class ObjectConfig
         {
             private List<object> mConstructorParams = new List<object>();
             private List<object> mRefConstructorParams = new List<object>();
+            private List<PropertySetting> mProperties = new List<PropertySetting>();
 
             public string Id
             {
@@ -109,6 +142,14 @@ namespace CodeM.Common.Ioc
                 get
                 {
                     return mRefConstructorParams;
+                }
+            }
+
+            public List<PropertySetting> Properties
+            {
+                get
+                {
+                    return mProperties;
                 }
             }
         }
@@ -186,6 +227,7 @@ namespace CodeM.Common.Ioc
                 Type currentParamType = null;
                 IList currentParamList = null;
                 RefListObjectSetting currentParamRefList = null;
+                string currentPropertyName = string.Empty;
 
                 Regex reInt = new Regex("^[0-9]*$", RegexOptions.None);
                 Regex reDouble = new Regex("^[0-9\\.]*$", RegexOptions.None);
@@ -226,10 +268,20 @@ namespace CodeM.Common.Ioc
                             currentConfig = null;
                         }
                     }
-                    else if (nodeInfo.Path == "/objects/object/constructor-arg")
+                    else if (nodeInfo.Path == "/objects/object/constructor-arg" ||
+                            nodeInfo.Path == "/objects/object/property")
                     {
-                        if (!nodeInfo.IsEndNode && nodeInfo.HasAttributes())
+                        if (!nodeInfo.IsEndNode)
                         {
+                            if (nodeInfo.Path == "/objects/object/property")
+                            {
+                                currentPropertyName = nodeInfo.GetAttribute("name");
+                                if (string.IsNullOrWhiteSpace(currentPropertyName))
+                                {
+                                    throw new Exception("name属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                }
+                            }
+
                             currentParamRefId = nodeInfo.GetAttribute("ref");
                             if (string.IsNullOrWhiteSpace(currentParamRefId))
                             {
@@ -264,6 +316,7 @@ namespace CodeM.Common.Ioc
                         {
                             currentParamRefId = string.Empty;
                             currentParamType = null;
+                            currentPropertyName = string.Empty;
                         }
                     }
                     else if (nodeInfo.Path == "/objects/object/constructor-arg/@text")
@@ -280,15 +333,22 @@ namespace CodeM.Common.Ioc
                             currentConfig.RefConstructorParams.Add(new RefObjectSetting(currentParamRefId, index));
                         }
 
-                        //Hashtable a = new Hashtable();
-
-                        //IDictionary aaa;
-                        //Dictionary<string, string> b = new Dictionary<string, string>();
-                        ////HashSet<int> c = new HashSet<int>();
-
-                        ////HashSet
-                        //Hashtable a = Hashtable.Synchronized(new Hashtable());
-                        //aaa = a;
+                        //TODO 对象构造支持更多的参数类型      Hashtable、Dictionary、HashSet等
+                    }
+                    else if (nodeInfo.Path == "/objects/object/property/@text")
+                    {
+                        if (string.IsNullOrWhiteSpace(currentParamRefId))
+                        {
+                            string propertyValue = nodeInfo.Text.Trim();
+                            PropertySetting propSetting = new PropertySetting(currentPropertyName, propertyValue);
+                            currentConfig.Properties.Add(propSetting);
+                        }
+                        else
+                        {
+                            PropertySetting propSetting = new PropertySetting(currentPropertyName);
+                            propSetting.RefId = currentParamRefId;
+                            currentConfig.Properties.Add(propSetting);
+                        }
                     }
                     else if (nodeInfo.Path == "/objects/object/constructor-arg/list" ||
                             nodeInfo.Path == "/objects/object/constructor-arg/array")

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace CodeM.Common.Ioc
 {
@@ -61,6 +62,7 @@ namespace CodeM.Common.Ioc
         public static T GetSingleObject<T>(string classFullName, params object[] args)
         {
             object result = GetSingleObject(classFullName, args);
+
             if (result != null)
             {
                 return (T)result;
@@ -129,13 +131,50 @@ namespace CodeM.Common.Ioc
             }
         }
 
+        private static void SetProperties(IocConfig.ObjectConfig item, object inst)
+        {
+            List<IocConfig.PropertySetting> props = item.Properties;
+            if (props.Count > 0)
+            {
+                Type instType = inst.GetType();
+                foreach (IocConfig.PropertySetting prop in props)
+                {
+                    PropertyInfo propInfo = instType.GetProperty(prop.Name, BindingFlags.Static |
+                        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic |
+                        BindingFlags.IgnoreCase);
+                    if (propInfo != null && propInfo.CanWrite)
+                    {
+                        object value = null;
+                        if (!string.IsNullOrWhiteSpace(prop.RefId))
+                        {
+                            //TODO
+                        }
+                        else
+                        {
+                            if (propInfo.PropertyType.IsEnum)
+                            {
+                                value = Enum.Parse(propInfo.PropertyType, prop.Value.ToString(), true);
+                            }
+                            else
+                            {
+                                value = Convert.ChangeType(prop.Value, propInfo.PropertyType);
+                            }
+                        }
+                        propInfo.SetValue(inst, value);
+                    }
+                }
+            }
+        }
+
         public static object GetSingleObjectById(string objectId)
         {
             IocConfig.ObjectConfig item = IocConfig.GetObjectConfig(objectId);
             AssertObjectConfig(item, objectId);
 
             object[] cps = BuildConstructorArgs(item);
-            return GetSingleObject(item.Class, cps);
+            object result = GetSingleObject(item.Class, cps);
+            SetProperties(item, result);
+            return result;
         }
 
         public static T GetSingleObjectById<T>(string objectId)
@@ -144,7 +183,9 @@ namespace CodeM.Common.Ioc
             AssertObjectConfig(item, objectId);
 
             object[] cps = BuildConstructorArgs(item);
-            return GetSingleObject<T>(item.Class, cps);
+            T result = GetSingleObject<T>(item.Class, cps);
+            SetProperties(item, result);
+            return result;
         }
 
         /// <summary>
@@ -179,7 +220,9 @@ namespace CodeM.Common.Ioc
             AssertObjectConfig(item, objectId);
 
             object[] cps = BuildConstructorArgs(item);
-            return GetObject(item.Class, cps);
+            object result = GetObject(item.Class, cps);
+            SetProperties(item, result);
+            return result;
         }
 
         public static T GetObjectById<T>(string objectId)
@@ -188,7 +231,9 @@ namespace CodeM.Common.Ioc
             AssertObjectConfig(item, objectId);
 
             object[] cps = BuildConstructorArgs(item);
-            return GetObject<T>(item.Class, cps);
+            T result = GetObject<T>(item.Class, cps);
+            SetProperties(item, result);
+            return result;
         }
     }
 }

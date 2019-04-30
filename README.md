@@ -99,11 +99,25 @@ objectId: 配置文件中对象Id
 #### 返回：
 指定类型的对象实例，多次调用返回同一实例。
 
-## 示例
+## 代码示例
 ```
 object person = IocUtils.GetObject("TestLibrary.Person");
 Console.WriteLine(person);
 
 object person2 = IocUtils.GetObject("TestLibrary.Person", "张三");
 Console.WriteLine(person2);
+```
+
+## 配置文件示例
+```xml
+<objects>
+    <object id="abc">
+        <constructor-arg>wangxm</constructor-arg>
+        <constructor-arg type="Int16">18</constructor-arg>
+        <constructor-arg type="TestLibrary.Sex">Male</constructor-arg>
+        
+        <property name="name">王小明</property>
+        <property name="age">21</property>
+    </object>
+</objects>
 ```

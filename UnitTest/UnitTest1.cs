@@ -2,6 +2,7 @@ using CodeM.Common.Ioc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace UnitTest
 {
@@ -11,7 +12,7 @@ namespace UnitTest
         [TestMethod]
         public void BuildByClassName()
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp2.1");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -44,7 +45,7 @@ namespace UnitTest
         [DataRow("fff")]
         public void BuildByConfigId(string objectId)
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp2.1");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -65,7 +66,7 @@ namespace UnitTest
         [DataRow("hhh")]
         public void BuildByConfigIdWithObjectReference(string objectId)
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp2.1");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -79,6 +80,33 @@ namespace UnitTest
             Console.WriteLine(objectId + ": " + obj);
 
             IocUtils.RemoveSearchPath(di.FullName);
+        }
+
+        [TestMethod]
+        [DataRow("iii")]
+        public void SetPropertyByConfig(string objectId)
+        {
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            DirectoryInfo di = new DirectoryInfo(testlibraryPath);
+
+            IocUtils.AddSearchPath(di.FullName);
+
+            string config = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\ioc.xml");
+            IocUtils.LoadConfig(config);
+
+            object obj = IocUtils.GetObjectById(objectId);
+            Assert.IsNotNull(obj);
+            Console.WriteLine(objectId + ": " + obj);
+
+            IocUtils.RemoveSearchPath(di.FullName);
+
+            Assert.IsInstanceOfType(obj, typeof(TestLibrary.Person));
+
+            TestLibrary.Person pobj = obj as TestLibrary.Person;
+
+            Assert.AreEqual(pobj.Name, "ÍõÐ¡Ã÷");
+            Assert.AreEqual(pobj.Age, 18);
+            Assert.AreEqual(pobj.IsPerson, true);
         }
     }
 }

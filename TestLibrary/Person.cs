@@ -78,6 +78,10 @@ namespace TestLibrary
             {
                 return mName;
             }
+            set
+            {
+                mName = value;
+            }
         }
 
         public Int16 Age
@@ -86,6 +90,10 @@ namespace TestLibrary
             {
                 return mAge;
             }
+            set
+            {
+                mAge = value;
+            }
         }
 
         public bool IsPerson
@@ -93,6 +101,10 @@ namespace TestLibrary
             get
             {
                 return mIsPerson;
+            }
+            set
+            {
+                mIsPerson = value;
             }
         }
 

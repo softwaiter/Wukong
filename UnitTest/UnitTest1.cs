@@ -1,6 +1,7 @@
 using CodeM.Common.Ioc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -78,6 +79,30 @@ namespace UnitTest
             Assert.IsNotNull(obj);
 
             Console.WriteLine(objectId + ": " + obj);
+
+            IocUtils.RemoveSearchPath(di.FullName);
+        }
+
+        [TestMethod]
+        public void Create10000Object()
+        {
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            DirectoryInfo di = new DirectoryInfo(testlibraryPath);
+
+            IocUtils.AddSearchPath(di.FullName);
+
+            string config = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\ioc.xml");
+            IocUtils.LoadConfig(config);
+
+            Stopwatch w = new Stopwatch();
+            w.Start();
+
+            for (int i = 0; i < 1000000; i++)
+            {
+                object obj = IocUtils.GetObjectById("hhh");
+            }
+
+            w.Stop();
 
             IocUtils.RemoveSearchPath(di.FullName);
         }

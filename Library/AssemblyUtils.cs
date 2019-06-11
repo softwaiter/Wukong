@@ -52,6 +52,7 @@ namespace CodeM.Common.Ioc
         private static Assembly FindAssemblyInSearchPath(string classFullName)
         {
             List<string> searchDirs = new List<string>();
+            searchDirs.Add(AppDomain.CurrentDomain.BaseDirectory);
             lock (sSearchPathLock)
             {
                 searchDirs.AddRange(sSearchPath);

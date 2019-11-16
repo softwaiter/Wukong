@@ -1,6 +1,24 @@
 # .netcore 轻量级IOC容器
 ---
 
+## Install
+
+### 依赖安装
+#### Package Manager
+Install-Package CodeM.Common.Ioc -Version 1.0.1
+
+#### .NET CLI
+dotnet add package CodeM.Common.Ioc --version 1.0.1
+
+#### PackageReference
+<PackageReference Include="CodeM.Common.Ioc" Version="1.0.1" />
+
+#### Paket CLI
+paket add CodeM.Common.Ioc --version 1.0.1
+
+
+## API
+
 ### 一、添加程序集搜索路径（默认只在应用执行目录中搜索）
 #### 定义：
 public static void AddSearchPath(string path)

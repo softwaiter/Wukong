@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace UnitTest
 {
@@ -13,7 +12,7 @@ namespace UnitTest
         [TestMethod]
         public void BuildByClassName()
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -22,15 +21,15 @@ namespace UnitTest
             Assert.IsNotNull(a);
             Console.WriteLine("a: " + a);
 
-            object b = IocUtils.GetObject("TestLibrary.Person", "’≈»˝");
+            object b = IocUtils.GetObject("TestLibrary.Person", "Âº†‰∏â");
             Assert.IsNotNull(b);
             Console.WriteLine("b: " + b);
 
-            object c = IocUtils.GetObject("TestLibrary.Person", "’≈»˝", true);
+            object c = IocUtils.GetObject("TestLibrary.Person", "ÊùéÂõõ", true);
             Assert.IsNotNull(c);
             Console.WriteLine("c: " + c);
 
-            object d = IocUtils.GetObject("TestLibrary.Person", "’≈»˝", (Int16)18, true);
+            object d = IocUtils.GetObject("TestLibrary.Person", "Áéã‰∫î", (Int16)18, true);
             Assert.IsNotNull(d);
             Console.WriteLine("d: " + d);
 
@@ -46,7 +45,7 @@ namespace UnitTest
         [DataRow("fff")]
         public void BuildByConfigId(string objectId)
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -67,7 +66,7 @@ namespace UnitTest
         [DataRow("hhh")]
         public void BuildByConfigIdWithObjectReference(string objectId)
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -86,7 +85,7 @@ namespace UnitTest
         [TestMethod]
         public void Create10000Object()
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -111,7 +110,7 @@ namespace UnitTest
         [DataRow("iii")]
         public void SetPropertyByConfig(string objectId)
         {
-            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.0");
+            string testlibraryPath = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\TestLibrary\\bin\\Debug\\netcoreapp3.1");
             DirectoryInfo di = new DirectoryInfo(testlibraryPath);
 
             IocUtils.AddSearchPath(di.FullName);
@@ -129,7 +128,7 @@ namespace UnitTest
 
             TestLibrary.Person pobj = obj as TestLibrary.Person;
 
-            Assert.AreEqual(pobj.Name, "Õı–°√˜");
+            Assert.AreEqual(pobj.Name, "ÁéãÂ∞èÊòé");
             Assert.AreEqual(pobj.Age, 18);
             Assert.AreEqual(pobj.IsPerson, true);
         }

@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>softwaiter</Authors>
     <Company>softwaiter</Company>
+    <Description>一套轻量级IOC操作库</Description>
   </PropertyGroup>
 
   <ItemGroup>

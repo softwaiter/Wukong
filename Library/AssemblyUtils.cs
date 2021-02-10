@@ -11,7 +11,7 @@ namespace CodeM.Common.Ioc
         private static List<string> sSearchPath = new List<string>();
         private static object sSearchPathLock = new object();
 
-        private static ConcurrentDictionary<string, bool> sLoadedAssemblies = new ConcurrentDictionary<string, bool>();
+        private static ConcurrentDictionary<string, Assembly> sLoadedAssemblies = new ConcurrentDictionary<string, Assembly>();
 
         private static ConcurrentDictionary<string, Assembly> sTypeAssemblies = new ConcurrentDictionary<string, Assembly>();
 
@@ -58,22 +58,30 @@ namespace CodeM.Common.Ioc
                 searchDirs.AddRange(sSearchPath);
             }
 
-            bool loadedAssemblyObj;
+            Assembly assembly;
             foreach (string dir in searchDirs)
             {
                 IEnumerable<string> dllFiles = Directory.EnumerateFiles(dir, "*.dll", SearchOption.AllDirectories);
                 IEnumerator<string> fileIterator = dllFiles.GetEnumerator();
                 while (fileIterator.MoveNext()) {
                     string filename = fileIterator.Current.ToLower();
-                    if (!sLoadedAssemblies.TryGetValue(filename, out loadedAssemblyObj))
+                    if (!sLoadedAssemblies.TryGetValue(filename, out assembly))
                     {
-                        Assembly assembly = Assembly.LoadFrom(filename);
-                        sLoadedAssemblies.TryAdd(filename, true);
-
-                        if (HasType(assembly, classFullName))
+                        try
                         {
-                            return assembly;
+                            assembly = Assembly.LoadFrom(filename);
+                            sLoadedAssemblies.TryAdd(filename, assembly);
                         }
+                        catch
+                        {
+                            assembly = null;
+                            continue;
+                        }
+                    }
+
+                    if (assembly != null && HasType(assembly, classFullName))
+                    {
+                        return assembly;
                     }
                 }
             }

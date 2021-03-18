@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Authors>softwaiter</Authors>
     <Company>softwaiter</Company>
     <Description>.netcore 一套轻量级IOC操作库</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CodeM.Common.Tools" Version="1.1.0" />
+    <PackageReference Include="CodeM.Common.Tools" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

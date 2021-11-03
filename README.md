@@ -6,22 +6,22 @@
 ### 依赖安装
 #### Package Manager
 ```shell
-Install-Package CodeM.Common.Ioc -Version 1.0.5
+Install-Package CodeM.Common.Ioc -Version 1.0.8
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package CodeM.Common.Ioc --version 1.0.5
+dotnet add package CodeM.Common.Ioc --version 1.0.8
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="CodeM.Common.Ioc" Version="1.0.5" />
+<PackageReference Include="CodeM.Common.Ioc" Version="1.0.8" />
 ```
 
 #### Paket CLI
 ```shell
-paket add CodeM.Common.Ioc --version 1.0.5
+paket add CodeM.Common.Ioc --version 1.0.8
 ```
 
 

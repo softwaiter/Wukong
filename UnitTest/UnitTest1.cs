@@ -21,8 +21,9 @@ namespace UnitTest
             Assert.IsNotNull(a);
             Console.WriteLine("a: " + a);
 
-            object b = IocUtils.GetObject("TestLibrary.Person", "张三");
+            dynamic b = IocUtils.GetObject("TestLibrary.Person", "张三");
             Assert.IsNotNull(b);
+            Assert.AreEqual("张三", b.Name);
             Console.WriteLine("b: " + b);
 
             object c = IocUtils.GetObject("TestLibrary.Person", "李四", true);

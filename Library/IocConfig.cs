@@ -1,4 +1,5 @@
-﻿using CodeM.Common.Tools.Xml;
+﻿using CodeM.Common.Tools;
+using CodeM.Common.Tools.Xml;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -232,7 +233,7 @@ namespace CodeM.Common.Ioc
                 Regex reInt = new Regex("^[0-9]*$", RegexOptions.None);
                 Regex reDouble = new Regex("^[0-9\\.]*$", RegexOptions.None);
 
-                XmlUtils.Iterate(path, (XmlNodeInfo nodeInfo) =>
+                Xmtool.Xml().Iterate(path, (XmlNodeInfo nodeInfo) =>
                 {
                     if (nodeInfo.Path == "/objects/object")
                     {

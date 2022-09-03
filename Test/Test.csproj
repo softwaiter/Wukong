@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\library\CodeM.Common.Ioc.csproj" />
-    <ProjectReference Include="..\TestLibrary\TestLibrary.csproj" />
+    <ProjectReference Include="..\Source\Source.csproj" />
+    <ProjectReference Include="..\TestExample\TestExample.csproj" />
   </ItemGroup>
 
 </Project>

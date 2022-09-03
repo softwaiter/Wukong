@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<objects>
+	<object id="defaultPerson" class="TestExample.Person">
+	</object>
+
+	<object id="initNamePerson" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+	</object>
+
+	<object id="initNameAndIsChinese" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+		<constructor-arg>true</constructor-arg>
+	</object>
+
+    <object id="initNameAndAgeAndIsChinese" class="TestExample.Person">
+        <constructor-arg>"张三"</constructor-arg>
+        <constructor-arg type="Int32">18</constructor-arg>
+        <constructor-arg>true</constructor-arg>
+    </object>
+
+    <object id="initNameAndSex" class="TestExample.Person">
+        <constructor-arg>"张三"</constructor-arg>
+        <constructor-arg type="TestExample.Sex">Male</constructor-arg>
+    </object>
+
+	<object id="father" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+		<constructor-arg type="TestExample.Sex">Male</constructor-arg>
+	</object>
+
+	<object id="mother" class="TestExample.Person">
+		<constructor-arg>"李四"</constructor-arg>
+		<constructor-arg type="TestExample.Sex">Female</constructor-arg>
+	</object>
+
+	<object id="intParents" class="TestExample.Person">
+		<constructor-arg ref="father"></constructor-arg>
+		<constructor-arg ref="mother"></constructor-arg>
+	</object>
+
+	<object id="usedNames" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+		<constructor-arg>
+			<array type="string">
+				<value>张飞</value>
+				<value>张良</value>
+			</array>
+		</constructor-arg>
+	</object>
+
+	<object id="initHobbies" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+		<constructor-arg>
+			<list type="string">
+				<value>"打篮球"</value>
+				<value>看电影</value>
+				<value>游泳</value>
+			</list>
+		</constructor-arg>
+	</object>
+
+	<object id="son" class="TestExample.Person">
+		<constructor-arg>"张大成"</constructor-arg>
+	</object>
+
+	<object id="daughter" class="TestExample.Person">
+		<constructor-arg>"张晓晓"</constructor-arg>
+	</object>
+
+	<object id="initChildren" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+		<constructor-arg>
+			<list type="TestExample.Person">
+				<value ref="son"></value>
+				<value ref="daughter"></value>
+			</list>
+		</constructor-arg>
+	</object>
+	
+	<object id="initChildrenByArray" class="TestExample.Person">
+		<constructor-arg>"张三"</constructor-arg>
+		<constructor-arg>
+			<array type="TestExample.Person">
+				<value ref="son"></value>
+				<value ref="daughter"></value>
+			</array>
+		</constructor-arg>
+	</object>
+
+    <object id="setValueProperty" class="TestExample.Person">
+        <property name="name">张三</property>
+        <property name="age">18</property>
+        <property name="ischinese">true</property>
+		<property name="sex">male</property>
+    </object>
+
+	<object id="setObjectProperty" class="TestExample.Person">
+		<property name="name">张晓晓</property>
+		<property name="Father" ref="father"></property>
+		<property name="Mother" ref="mother"></property>
+	</object>
+
+	<object id="setValueListProperty" class="TestExample.Person">
+		<property name="Hobbies">
+			<list type="string">
+				<value>"打篮球"</value>
+				<value>看电影</value>
+				<value>游泳</value>
+			</list>
+		</property>
+	</object>
+
+	<object id="setValueArrayProperty" class="TestExample.Person">
+		<property name="UsedNames">
+			<array type="string">
+				<value>张飞</value>
+				<value>张良</value>
+			</array>
+		</property>
+	</object>
+
+	<object id="setValueRefListProperty" class="TestExample.Person">
+		<property name="Children">
+			<list type="TestExample.Person">
+				<value ref="son"></value>
+				<value ref="daughter"></value>
+			</list>
+		</property>
+	</object>
+
+	<object id="dog" class="TestExample.Dog">
+		<constructor-arg>"Tom"</constructor-arg>
+		<constructor-arg>"it's a dog"</constructor-arg>
+	</object>
+
+	<object id="cat" class="TestExample.Cat">
+		<constructor-arg>"Huie"</constructor-arg>
+		<constructor-arg>"it's a cat"</constructor-arg>
+	</object>
+
+	<object id="setValueRefArrayProperty" class="TestExample.Person">
+		<property name="PetAnimals">
+			<array type="TestExample.IPetAnimal">
+				<value ref="dog"></value>
+				<value ref="cat"></value>
+			</array>
+		</property>
+	</object>
+</objects>

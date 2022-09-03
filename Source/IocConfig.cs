@@ -104,7 +104,13 @@ namespace CodeM.Common.Ioc
                 set;
             }
 
-            public string RefId
+            public RefObjectSetting RefObject
+            {
+                get;
+                set;
+            }
+
+            public RefListObjectSetting RefListObject
             {
                 get;
                 set;
@@ -160,7 +166,7 @@ namespace CodeM.Common.Ioc
         private static Regex sReInt = new Regex("^[0-9]*$", RegexOptions.None);
         private static Regex sReDouble = new Regex("^[0-9\\.]*$", RegexOptions.None);
 
-        private static void handleListValue(IList list, string value, Type valueType, string xmlPath, int xmlLine)
+        private static void HandleListValue(IList list, string value, Type valueType, string xmlPath, int xmlLine)
         {
             if (valueType != null)
             {
@@ -209,7 +215,7 @@ namespace CodeM.Common.Ioc
                 }
                 else
                 {
-                    throw new Exception("不能识别的构造参数" + ": " + xmlPath + " line " + xmlLine);
+                    throw new Exception("不能识别的参数" + ": " + xmlPath + " line " + xmlLine);
                 }
             };
         }
@@ -325,7 +331,7 @@ namespace CodeM.Common.Ioc
                         if (string.IsNullOrWhiteSpace(currentParamRefId))
                         {
                             string paramValue = nodeInfo.Text.Trim();
-                            handleListValue(currentConfig.ConstructorParams, paramValue, currentParamType, path, nodeInfo.Line);
+                            HandleListValue(currentConfig.ConstructorParams, paramValue, currentParamType, path, nodeInfo.Line);
                         }
                         else
                         {
@@ -347,12 +353,14 @@ namespace CodeM.Common.Ioc
                         else
                         {
                             PropertySetting propSetting = new PropertySetting(currentPropertyName);
-                            propSetting.RefId = currentParamRefId;
+                            propSetting.RefObject = new RefObjectSetting(currentParamRefId, -1);
                             currentConfig.Properties.Add(propSetting);
                         }
                     }
                     else if (nodeInfo.Path == "/objects/object/constructor-arg/list" ||
-                            nodeInfo.Path == "/objects/object/constructor-arg/array")
+                            nodeInfo.Path == "/objects/object/constructor-arg/array" ||
+                            nodeInfo.Path == "/objects/object/property/list" ||
+                            nodeInfo.Path == "/objects/object/property/array")
                     {
                         if (!nodeInfo.IsEndNode)
                         {
@@ -395,7 +403,8 @@ namespace CodeM.Common.Ioc
                             {
                                 int index = currentConfig.ConstructorParams.Count +
                                     currentConfig.RefConstructorParams.Count;
-                                bool isArray = nodeInfo.Path == "/objects/object/constructor-arg/array";
+                                bool isArray = nodeInfo.Path == "/objects/object/constructor-arg/array" ||
+                                    nodeInfo.Path == "/objects/object/property/array";
                                 currentParamRefList = new RefListObjectSetting(index, currentParamList, isArray);
                             }
                         }
@@ -413,10 +422,37 @@ namespace CodeM.Common.Ioc
                                     currentParamList.CopyTo(argArray, 0);
                                     currentConfig.ConstructorParams.Add(argArray);
                                 }
+                                else if (nodeInfo.Path == "/objects/object/property/list")
+                                {
+                                    PropertySetting ps = new PropertySetting(currentPropertyName, currentParamList);
+                                    currentConfig.Properties.Add(ps);
+                                }
+                                else if (nodeInfo.Path == "/objects/object/property/array")
+                                {
+                                    Array propArray = Array.CreateInstance(currentParamType, currentParamList.Count);
+                                    currentParamList.CopyTo(propArray, 0);
+                                    PropertySetting ps = new PropertySetting(currentPropertyName, propArray);
+                                    currentConfig.Properties.Add(ps);
+                                }
                             }
                             else
                             {
-                                currentConfig.RefConstructorParams.Add(currentParamRefList);
+                                if (nodeInfo.Path == "/objects/object/property/list")
+                                {
+                                    PropertySetting ps = new PropertySetting(currentPropertyName);
+                                    ps.RefListObject = currentParamRefList;
+                                    currentConfig.Properties.Add(ps);
+                                }
+                                else if (nodeInfo.Path == "/objects/object/property/array")
+                                {
+                                    PropertySetting ps = new PropertySetting(currentPropertyName);
+                                    ps.RefListObject = currentParamRefList;
+                                    currentConfig.Properties.Add(ps);
+                                }
+                                else
+                                {
+                                    currentConfig.RefConstructorParams.Add(currentParamRefList);
+                                }
                             }
 
                             currentParamType = null;
@@ -425,7 +461,9 @@ namespace CodeM.Common.Ioc
                         }
                     }
                     else if (nodeInfo.Path == "/objects/object/constructor-arg/list/value" ||
-                            nodeInfo.Path == "/objects/object/constructor-arg/array/value")
+                            nodeInfo.Path == "/objects/object/constructor-arg/array/value" ||
+                            nodeInfo.Path == "/objects/object/property/list/value" ||
+                            nodeInfo.Path == "/objects/object/property/array/value")
                     {
                         if (!nodeInfo.IsEndNode)
                         {
@@ -448,12 +486,14 @@ namespace CodeM.Common.Ioc
                         }
                     }
                     else if (nodeInfo.Path == "/objects/object/constructor-arg/list/value/@text" ||
-                            nodeInfo.Path == "/objects/object/constructor-arg/array/value/@text")
+                            nodeInfo.Path == "/objects/object/constructor-arg/array/value/@text" ||
+                            nodeInfo.Path == "/objects/object/property/list/value/@text" ||
+                            nodeInfo.Path == "/objects/object/property/array/value/@text")
                     {
                         if (currentParamRefList == null)
                         {
                             string paramValue = nodeInfo.Text.Trim();
-                            handleListValue(currentParamList, paramValue, currentParamType, path, nodeInfo.Line);
+                            HandleListValue(currentParamList, paramValue, currentParamType, path, nodeInfo.Line);
                         }
                     }
 

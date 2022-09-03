@@ -1,11 +1,14 @@
-﻿using System;
+﻿using CodeM.Common.Tools;
+using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace CodeM.Common.Ioc
 {
-    public class IocUtils
+    public class Wukong
     {
         private static ConcurrentDictionary<string, object> sSingleInstances = new ConcurrentDictionary<string, object>();
         private static object sSingleLock = new object();
@@ -36,22 +39,36 @@ namespace CodeM.Common.Ioc
             IocConfig.LoadFile(configFile, append);
         }
 
+        private static string GetSingleObjectKey(string classFullName, params object[] args)
+        {
+            StringBuilder sbResult = new StringBuilder(classFullName);
+            foreach (object arg in args)
+            {
+                if (arg != null)
+                {
+                    sbResult.Append(arg.ToString());
+                }
+            }
+            return sbResult.ToString().ToLower();
+        }
+
         /// <summary>
         /// 获取单例实例
         /// </summary>
         public static object GetSingleObject(string classFullName, params object[] args)
         {
             object result = null;
-            if (!sSingleInstances.TryGetValue(classFullName.ToLower(), out result))
+            string key = GetSingleObjectKey(classFullName, args);
+            if (!sSingleInstances.TryGetValue(key, out result))
             { 
                 lock (sSingleLock)
                 {
-                    if (!sSingleInstances.TryGetValue(classFullName.ToLower(), out result))
+                    if (!sSingleInstances.TryGetValue(key, out result))
                     {
                         result = AssemblyUtils.CreateInstance(classFullName, args);
                         if (result != null)
                         {
-                            sSingleInstances.AddOrUpdate(classFullName.ToLower(), result, (oldKey, oldValue) => { return result; });
+                            sSingleInstances.AddOrUpdate(key, result, (oldKey, oldValue) => { return result; });
                         }
                     }
                 }
@@ -94,16 +111,16 @@ namespace CodeM.Common.Ioc
                     {
                         IocConfig.RefListObjectSetting rlos = refItem as IocConfig.RefListObjectSetting;
 
-                        rlos.List.Clear();
+                        IList refObjList = Xmtool.Type().CloneList(rlos.List, false);
                         foreach (string itemRefId in rlos.ItemList)
                         {
                             object refObj = GetObjectById(itemRefId);
-                            rlos.List.Add(refObj);
+                            refObjList.Add(refObj);
                         }
 
                         if (!rlos.IsArray)
                         {
-                            result.Insert(rlos.Index, rlos.List);
+                            result.Insert(rlos.Index, refObjList);
                         }
                         else
                         {
@@ -115,8 +132,8 @@ namespace CodeM.Common.Ioc
                             {
                                 genericType = argTypes[0];
                             }
-                            Array paramArray = Array.CreateInstance(genericType, rlos.List.Count);
-                            rlos.List.CopyTo(paramArray, 0);
+                            Array paramArray = Array.CreateInstance(genericType, refObjList.Count);
+                            refObjList.CopyTo(paramArray, 0);
 
                             result.Insert(rlos.Index, paramArray);
                         }
@@ -145,9 +162,38 @@ namespace CodeM.Common.Ioc
                     if (propInfo != null && propInfo.CanWrite)
                     {
                         object value = null;
-                        if (!string.IsNullOrWhiteSpace(prop.RefId))
+                        if (prop.RefObject != null)
                         {
-                            //TODO
+                            value = GetObjectById(prop.RefObject.RefId);
+                        }
+                        else if (prop.RefListObject != null)
+                        {
+                            IList refObjList = Xmtool.Type().CloneList(prop.RefListObject.List, false);
+                            foreach (string itemRefId in prop.RefListObject.ItemList)
+                            {
+                                object refObj = GetObjectById(itemRefId);
+                                refObjList.Add(refObj);
+                            }
+
+                            if (prop.RefListObject.IsArray)
+                            {
+                                Type genericType = Type.GetType("System.Object", true, true);
+
+                                Type listType = prop.RefListObject.List.GetType();
+                                Type[] argTypes = listType.GetGenericArguments();
+                                if (argTypes != null && argTypes.Length > 0)
+                                {
+                                    genericType = argTypes[0];
+                                }
+                                Array propArray = Array.CreateInstance(genericType, refObjList.Count);
+                                refObjList.CopyTo(propArray, 0);
+
+                                value = propArray;
+                            }
+                            else
+                            {
+                                value = refObjList;
+                            }
                         }
                         else
                         {

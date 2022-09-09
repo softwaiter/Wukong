@@ -25,22 +25,22 @@
 ## :package: 依赖安装
 #### Package Manager
 ```shell
-Install-Package Wukong -Version 2.0.0
+Install-Package Wukong -Version 2.0.1
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package Wukong --version 2.0.0
+dotnet add package Wukong --version 2.0.1
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="Wukong" Version="2.0.0" />
+<PackageReference Include="Wukong" Version="2.0.1" />
 ```
 
 #### Paket CLI
 ```shell
-paket add Wukong --version 2.0.0
+paket add Wukong --version 2.0.1
 ```
 <br/>
 
@@ -164,6 +164,44 @@ public static T GetSingleObjectById&lt;T&gt;(string objectId)
 objectId: 配置文件中对象Id
 #### 返回：
 指定类型的对象实例，多次调用返回同一实例。<br/>
+
+### 十二、执行指定对象的指定方法，并获取返回值
+
+#### 定义：
+
+public static object Invoke(object inst, string method, params object[] args)
+
+#### 参数：
+
+inst: 要执行的方法所在的对象实例，必填。
+
+method: 要执行方法的名称，忽略大小写，必填。
+
+args: 要执行方法所需要的参数，可选。
+
+#### 返回：
+
+执行方法后得到的返回值。
+
+### 十三、执行指定对象的指定方法，并获取指定类型的返回值
+
+#### 定义：
+
+public static T Invoke<T>(object inst, string method, params object[] args)
+
+#### 参数：
+
+T: 泛型参数，指定期望得到的返回值类型，必填。
+
+inst: 要执行的方法所在的对象实例，必填。
+
+method: 要执行方法的名称，忽略大小写，必填。
+
+args: 要执行方法所需要的参数，可选。
+
+#### 返回：
+
+执行方法后得到的返回值。
 
 <br/>
 
@@ -376,4 +414,13 @@ dynamic person = Wukong.GetObjectById("defaultPerson");
 dynamic person2 = Wukong.GetObjectById("initNameAndAgeAndIsChinese");
 ```
 
+### 四、执行对象方法
+
+```c#
+Person pernson = new Person("张三");
+object name = Wukong.Invoke(pernson, "GetName");
+string name2 = Wukong.Invoke<string>(pernson, "GetName");
+```
+
 <br/>
+

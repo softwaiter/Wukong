@@ -79,7 +79,6 @@ namespace CodeM.Common.Ioc
         public static T GetSingleObject<T>(string classFullName, params object[] args)
         {
             object result = GetSingleObject(classFullName, args);
-
             if (result != null)
             {
                 return (T)result;
@@ -218,20 +217,35 @@ namespace CodeM.Common.Ioc
             AssertObjectConfig(item, objectId);
 
             object[] cps = BuildConstructorArgs(item);
-            object result = GetSingleObject(item.Class, cps);
-            SetProperties(item, result);
+
+            object result = null;
+            string key = string.Concat(GetSingleObjectKey(item.Class, cps), "_", objectId.ToLower());
+            if (!sSingleInstances.TryGetValue(key, out result))
+            {
+                lock (sSingleLock)
+                {
+                    if (!sSingleInstances.TryGetValue(key, out result))
+                    {
+                        result = AssemblyUtils.CreateInstance(item.Class, cps);
+                        if (result != null)
+                        {
+                            SetProperties(item, result);
+                            sSingleInstances.AddOrUpdate(key, result, (oldKey, oldValue) => { return result; });
+                        }
+                    }
+                }
+            }
             return result;
         }
 
         public static T GetSingleObjectById<T>(string objectId)
         {
-            IocConfig.ObjectConfig item = IocConfig.GetObjectConfig(objectId);
-            AssertObjectConfig(item, objectId);
-
-            object[] cps = BuildConstructorArgs(item);
-            T result = GetSingleObject<T>(item.Class, cps);
-            SetProperties(item, result);
-            return result;
+            object result = GetSingleObjectById(objectId);
+            if (result != null)
+            {
+                return (T)result;
+            }
+            return default(T);
         }
 
         /// <summary>

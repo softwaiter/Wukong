@@ -133,6 +133,26 @@ namespace TestExample
 
         public IPetAnimal[] PetAnimals { get; set; } = null;
 
+        public string GetName()
+        {
+            return Name;
+        }
+
+        public void SetName(string name)
+        {
+            this.Name = name;
+        }
+
+        public int GetAge()
+        {
+            return Age;
+        }
+
+        public void SetAge(int age)
+        {
+            this.Age = age;
+        }
+
         public override string ToString()
         {
             return string.Concat("Name: ", this.Name, "  Sex: ", this.Sex, "  Age: ", this.Age, "  IsChinese: ", this.IsChinese);

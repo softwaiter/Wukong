@@ -295,5 +295,35 @@ namespace CodeM.Common.Ioc
             SetProperties(item, result);
             return result;
         }
+
+        public static object Invoke(object inst, string method, params object[] args)
+        {
+            List<Type> _typs = new List<Type>();
+            foreach (object obj in args)
+            {
+                _typs.Add(obj.GetType());
+            }
+
+            MethodInfo mi = inst.GetType().GetMethod(method,
+                BindingFlags.Instance | BindingFlags.Public | 
+                BindingFlags.NonPublic | BindingFlags.IgnoreCase,
+                null, _typs.ToArray(), null);
+            if (mi != null)
+            {
+                return mi.Invoke(inst, args);
+            }
+
+            throw new Exception(string.Concat("执行方法异常：", method));
+        }
+
+        public static T Invoke<T>(object inst, string method, params object[] args)
+        {
+            object result = Invoke(inst, method, args);
+            if (result != null)
+            {
+                return (T)result;
+            }
+            return default(T);
+        }
     }
 }

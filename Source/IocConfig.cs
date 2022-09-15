@@ -220,14 +220,19 @@ namespace CodeM.Common.Ioc
             };
         }
 
-        public static void LoadFile(string path, bool append = true)
+        public static void LoadFile(string filePath, bool append = true)
+        {
+            LoadFile(filePath, "/objects/object", append);
+        }
+
+        public static void LoadFile(string filPath, string objectPath, bool append = true)
         {
             if (!append)
             {
                 sConfigs.Clear();
             }
 
-            if (File.Exists(path))
+            if (File.Exists(filPath))
             {
                 ObjectConfig currentConfig = null;
                 string currentParamRefId = string.Empty;
@@ -239,30 +244,30 @@ namespace CodeM.Common.Ioc
                 Regex reInt = new Regex("^[0-9]*$", RegexOptions.None);
                 Regex reDouble = new Regex("^[0-9\\.]*$", RegexOptions.None);
 
-                Xmtool.Xml().Iterate(path, (XmlNodeInfo nodeInfo) =>
+                Xmtool.Xml().Iterate(filPath, (XmlNodeInfo nodeInfo) =>
                 {
-                    if (nodeInfo.Path == "/objects/object")
+                    if (nodeInfo.Path == objectPath)
                     {
                         if (!nodeInfo.IsEndNode)
                         {
                             string attrId = nodeInfo.GetAttribute("id");
                             if (attrId == null)
                             {
-                                throw new Exception("id属性是必须的" + ": " + path + " line " + nodeInfo.Line);
+                                throw new Exception("id属性是必须的" + ": " + filPath + " line " + nodeInfo.Line);
                             }
                             else if (string.IsNullOrWhiteSpace(attrId))
                             {
-                                throw new Exception("id属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                throw new Exception("id属性不能为空" + ": " + filPath + " line " + nodeInfo.Line);
                             }
 
                             string attrClass = nodeInfo.GetAttribute("class");
                             if (attrClass == null)
                             {
-                                throw new Exception("class属性是必须的" + ": " + path + " line " + nodeInfo.Line);
+                                throw new Exception("class属性是必须的" + ": " + filPath + " line " + nodeInfo.Line);
                             }
                             else if (string.IsNullOrWhiteSpace(attrClass))
                             {
-                                throw new Exception("class属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                throw new Exception("class属性不能为空" + ": " + filPath + " line " + nodeInfo.Line);
                             }
 
                             currentConfig = new ObjectConfig();
@@ -275,17 +280,17 @@ namespace CodeM.Common.Ioc
                             currentConfig = null;
                         }
                     }
-                    else if (nodeInfo.Path == "/objects/object/constructor-arg" ||
-                            nodeInfo.Path == "/objects/object/property")
+                    else if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property"))
                     {
                         if (!nodeInfo.IsEndNode)
                         {
-                            if (nodeInfo.Path == "/objects/object/property")
+                            if (nodeInfo.Path == string.Concat(objectPath, "/property"))
                             {
                                 currentPropertyName = nodeInfo.GetAttribute("name");
                                 if (string.IsNullOrWhiteSpace(currentPropertyName))
                                 {
-                                    throw new Exception("name属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                    throw new Exception("name属性不能为空" + ": " + filPath + " line " + nodeInfo.Line);
                                 }
                             }
 
@@ -310,7 +315,7 @@ namespace CodeM.Common.Ioc
                                     }
                                     else
                                     {
-                                        throw new Exception("type属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                        throw new Exception("type属性不能为空" + ": " + filPath + " line " + nodeInfo.Line);
                                     }
                                 }
                                 else
@@ -326,12 +331,12 @@ namespace CodeM.Common.Ioc
                             currentPropertyName = string.Empty;
                         }
                     }
-                    else if (nodeInfo.Path == "/objects/object/constructor-arg/@text")
+                    else if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/@text"))
                     {
                         if (string.IsNullOrWhiteSpace(currentParamRefId))
                         {
                             string paramValue = nodeInfo.Text.Trim();
-                            HandleListValue(currentConfig.ConstructorParams, paramValue, currentParamType, path, nodeInfo.Line);
+                            HandleListValue(currentConfig.ConstructorParams, paramValue, currentParamType, filPath, nodeInfo.Line);
                         }
                         else
                         {
@@ -342,7 +347,7 @@ namespace CodeM.Common.Ioc
 
                         //TODO 对象构造支持更多的参数类型      Hashtable、Dictionary、HashSet等
                     }
-                    else if (nodeInfo.Path == "/objects/object/property/@text")
+                    else if (nodeInfo.Path == string.Concat(objectPath, "/property/@text"))
                     {
                         if (string.IsNullOrWhiteSpace(currentParamRefId))
                         {
@@ -357,10 +362,10 @@ namespace CodeM.Common.Ioc
                             currentConfig.Properties.Add(propSetting);
                         }
                     }
-                    else if (nodeInfo.Path == "/objects/object/constructor-arg/list" ||
-                            nodeInfo.Path == "/objects/object/constructor-arg/array" ||
-                            nodeInfo.Path == "/objects/object/property/list" ||
-                            nodeInfo.Path == "/objects/object/property/array")
+                    else if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/list") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/array") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property/list") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property/array"))
                     {
                         if (!nodeInfo.IsEndNode)
                         {
@@ -385,7 +390,7 @@ namespace CodeM.Common.Ioc
                                 }
                                 else
                                 {
-                                    throw new Exception("type属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                    throw new Exception("type属性不能为空" + ": " + filPath + " line " + nodeInfo.Line);
                                 }
 
                                 Type geneType = typeof(List<>);
@@ -403,8 +408,8 @@ namespace CodeM.Common.Ioc
                             {
                                 int index = currentConfig.ConstructorParams.Count +
                                     currentConfig.RefConstructorParams.Count;
-                                bool isArray = nodeInfo.Path == "/objects/object/constructor-arg/array" ||
-                                    nodeInfo.Path == "/objects/object/property/array";
+                                bool isArray = nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/array") ||
+                                    nodeInfo.Path == string.Concat(objectPath, "/property/array");
                                 currentParamRefList = new RefListObjectSetting(index, currentParamList, isArray);
                             }
                         }
@@ -412,22 +417,22 @@ namespace CodeM.Common.Ioc
                         {
                             if (currentParamRefList == null)
                             {
-                                if (nodeInfo.Path == "/objects/object/constructor-arg/list")
+                                if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/list"))
                                 {
                                     currentConfig.ConstructorParams.Add(currentParamList);
                                 }
-                                else if (nodeInfo.Path == "/objects/object/constructor-arg/array")
+                                else if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/array"))
                                 {
                                     Array argArray = Array.CreateInstance(currentParamType, currentParamList.Count);
                                     currentParamList.CopyTo(argArray, 0);
                                     currentConfig.ConstructorParams.Add(argArray);
                                 }
-                                else if (nodeInfo.Path == "/objects/object/property/list")
+                                else if (nodeInfo.Path == string.Concat(objectPath, "/property/list"))
                                 {
                                     PropertySetting ps = new PropertySetting(currentPropertyName, currentParamList);
                                     currentConfig.Properties.Add(ps);
                                 }
-                                else if (nodeInfo.Path == "/objects/object/property/array")
+                                else if (nodeInfo.Path == string.Concat(objectPath, "/property/array"))
                                 {
                                     Array propArray = Array.CreateInstance(currentParamType, currentParamList.Count);
                                     currentParamList.CopyTo(propArray, 0);
@@ -437,13 +442,13 @@ namespace CodeM.Common.Ioc
                             }
                             else
                             {
-                                if (nodeInfo.Path == "/objects/object/property/list")
+                                if (nodeInfo.Path == string.Concat(objectPath, "/property/list"))
                                 {
                                     PropertySetting ps = new PropertySetting(currentPropertyName);
                                     ps.RefListObject = currentParamRefList;
                                     currentConfig.Properties.Add(ps);
                                 }
-                                else if (nodeInfo.Path == "/objects/object/property/array")
+                                else if (nodeInfo.Path == string.Concat(objectPath, "/property/array"))
                                 {
                                     PropertySetting ps = new PropertySetting(currentPropertyName);
                                     ps.RefListObject = currentParamRefList;
@@ -460,10 +465,10 @@ namespace CodeM.Common.Ioc
                             currentParamRefList = null;
                         }
                     }
-                    else if (nodeInfo.Path == "/objects/object/constructor-arg/list/value" ||
-                            nodeInfo.Path == "/objects/object/constructor-arg/array/value" ||
-                            nodeInfo.Path == "/objects/object/property/list/value" ||
-                            nodeInfo.Path == "/objects/object/property/array/value")
+                    else if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/list/value") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/array/value") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property/list/value") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property/array/value"))
                     {
                         if (!nodeInfo.IsEndNode)
                         {
@@ -476,7 +481,7 @@ namespace CodeM.Common.Ioc
                                 }
                                 else
                                 {
-                                    throw new Exception("ref属性不能为空" + ": " + path + " line " + nodeInfo.Line);
+                                    throw new Exception("ref属性不能为空" + ": " + filPath + " line " + nodeInfo.Line);
                                 }
                             }
                         }
@@ -485,15 +490,15 @@ namespace CodeM.Common.Ioc
                             currentParamRefId = string.Empty;
                         }
                     }
-                    else if (nodeInfo.Path == "/objects/object/constructor-arg/list/value/@text" ||
-                            nodeInfo.Path == "/objects/object/constructor-arg/array/value/@text" ||
-                            nodeInfo.Path == "/objects/object/property/list/value/@text" ||
-                            nodeInfo.Path == "/objects/object/property/array/value/@text")
+                    else if (nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/list/value/@text") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/constructor-arg/array/value/@text") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property/list/value/@text") ||
+                            nodeInfo.Path == string.Concat(objectPath, "/property/array/value/@text"))
                     {
                         if (currentParamRefList == null)
                         {
                             string paramValue = nodeInfo.Text.Trim();
-                            HandleListValue(currentParamList, paramValue, currentParamType, path, nodeInfo.Line);
+                            HandleListValue(currentParamList, paramValue, currentParamType, filPath, nodeInfo.Line);
                         }
                     }
 

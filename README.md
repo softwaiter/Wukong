@@ -25,22 +25,22 @@
 ## :package: 依赖安装
 #### Package Manager
 ```shell
-Install-Package Wukong -Version 2.0.1
+Install-Package Wukong -Version 2.0.2
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package Wukong --version 2.0.1
+dotnet add package Wukong --version 2.0.2
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="Wukong" Version="2.0.1" />
+<PackageReference Include="Wukong" Version="2.0.2" />
 ```
 
 #### Paket CLI
 ```shell
-paket add Wukong --version 2.0.1
+paket add Wukong --version 2.0.2
 ```
 <br/>
 
@@ -78,7 +78,7 @@ path：搜索路径
 #### 返回：
 无<br/>
 
-### 三、加载对象配置文件
+### 三、加载对象配置文件（默认格式，对象路径遵循/objects/object格式）
 #### 定义： 
 public static void LoadConfig(string configFile, bool append = true)
 #### 参数：
@@ -89,7 +89,39 @@ append: 是否使用添加模式，默认为true。
 #### 返回：
 无<br/>
 
-### 四、根据类全名称获取对象实例
+### 四、加载自定义对象配置文件（对象路径可自定义）
+
+#### 定义：
+
+public static void LoadConfig(string configFile, string objectPath, bool append = true)
+
+#### 参数：
+
+configFile: 配置文件，绝对路径。
+<br>
+objectPath: 自定义对象的XML路径。
+<br>
+append: 是否使用添加模式，默认为true。
+
+#### 返回：
+
+无<br/>
+
+#### 例子：
+
+```xml
+<!--例：c:\\obj.xml对象配置文件采用如下格式-->
+<processors>
+	<processor id="test" class="TestExample.Person"></processor>
+</processors>
+```
+
+```c#
+// 使用如下方法加载c:\\obj.xml对象配置文件
+Wukong.LoadConfig("c:\\obj.xml", "/processors/processor")
+```
+
+### 五、根据类全名称获取对象实例
 #### 定义：
 public static object GetObject(string classFullName, params object[] args)
 #### 参数：
@@ -100,7 +132,7 @@ args: 对象构造参数数组。
 #### 返回：
 生成的对象实例。<br/>
 
-### 五、根据类全名称获取指定类型的对象实例
+### 六、根据类全名称获取指定类型的对象实例
 #### 定义：
 public static T GetObject&lt;T&gt;(string classFullName, params object[] args)
 #### 参数：
@@ -111,7 +143,7 @@ args: 对象构造参数数组。
 #### 返回：
 指定类型的对象实例。<br/>
 
-### 六、以单例模式根据类全名称获取对象实例
+### 七、以单例模式根据类全名称获取对象实例
 #### 定义：
 public static object GetSingleObject(string classFullName, params object[] args)
 #### 参数：
@@ -122,7 +154,7 @@ args: 对象构造参数数组。
 #### 返回：
 生成的对象实例，相同构造参数多次调用返回同一实例。<br/>
 
-### 七、以单例模式根据类全名称获取指定类型的对象实例
+### 八、以单例模式根据类全名称获取指定类型的对象实例
 #### 定义：
 public static T GetSingleObject&lt;T&gt;(string classFullName, params object[] args)
 #### 参数：
@@ -133,7 +165,7 @@ args: 对象构造参数数组。
 #### 返回：
 指定类型的对象实例，相同构造参数多次调用返回同一实例。<br/>
 
-### 八、根据配置文件Id获取对象实例
+### 九、根据配置文件Id获取对象实例
 #### 定义：
 public static object GetObjectById(string objectId)
 #### 参数：
@@ -141,7 +173,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 生成的对象实例。<br/>
 
-### 九、根据配置文件Id获取指定类型对象实例
+### 十、根据配置文件Id获取指定类型对象实例
 #### 定义：
 public static T GetObjectById&lt;T&gt;(string objectId)
 #### 参数：
@@ -149,7 +181,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 指定类型的对象实例。<br/>
 
-### 十、以单例模式根据配置文件Id获取对象实例
+### 十一、以单例模式根据配置文件Id获取对象实例
 #### 定义：
 public static object GetSingleObjectById(string objectId)
 #### 参数：
@@ -157,7 +189,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 对象实例，多次调用返回同一实例。<br/>
 
-### 十一、以单例模式根据配置文件Id获取指定类型的对象实例
+### 十二、以单例模式根据配置文件Id获取指定类型的对象实例
 #### 定义：
 public static T GetSingleObjectById&lt;T&gt;(string objectId)
 #### 参数：
@@ -165,7 +197,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 指定类型的对象实例，多次调用返回同一实例。<br/>
 
-### 十二、执行指定对象的指定方法，并获取返回值
+### 十三、执行指定对象的指定方法，并获取返回值
 
 #### 定义：
 
@@ -183,7 +215,7 @@ args: 要执行方法所需要的参数，可选。
 
 执行方法后得到的返回值。
 
-### 十三、执行指定对象的指定方法，并获取指定类型的返回值
+### 十四、执行指定对象的指定方法，并获取指定类型的返回值
 
 #### 定义：
 
@@ -209,7 +241,7 @@ args: 要执行方法所需要的参数，可选。
 
 通过配置文件可以预先把项目会用到的对象在XML文件中进行定义和初始化，配合项目框架使用，可以提供更大的灵活性和易用性。
 
-配置文件必须以`objects`为根节点，每个对象都使用`object`标签定义。
+配置文件默认以`objects`为根节点，每个对象都使用`object`标签定义。
 
 ### 一、对象定义
 

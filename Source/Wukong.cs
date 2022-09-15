@@ -39,6 +39,17 @@ namespace CodeM.Common.Ioc
             IocConfig.LoadFile(configFile, append);
         }
 
+        /// <summary>
+        /// 加载对象配置文件，可自定义XML对象标签名称
+        /// </summary>
+        /// <param name="configFile"></param>
+        /// <param name="objectPath">自定义对象标签名称</param>
+        /// <param name="append"></param>
+        public static void LoadConfig(string configFile, string objectPath, bool append = true)
+        { 
+            IocConfig.LoadFile(configFile, objectPath, append);
+        }
+
         private static string GetSingleObjectKey(string classFullName, params object[] args)
         {
             StringBuilder sbResult = new StringBuilder(classFullName);

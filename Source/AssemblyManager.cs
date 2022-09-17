@@ -6,16 +6,16 @@ using System.Reflection;
 
 namespace CodeM.Common.Ioc
 {
-    internal static class AssemblyUtils
+    internal class AssemblyManager
     {
-        private static List<string> sSearchPath = new List<string>();
-        private static object sSearchPathLock = new object();
+        private List<string> sSearchPath = new List<string>();
+        private object sSearchPathLock = new object();
 
-        private static ConcurrentDictionary<string, Assembly> sLoadedAssemblies = new ConcurrentDictionary<string, Assembly>();
+        private ConcurrentDictionary<string, Assembly> sLoadedAssemblies = new ConcurrentDictionary<string, Assembly>();
 
-        private static ConcurrentDictionary<string, Assembly> sTypeAssemblies = new ConcurrentDictionary<string, Assembly>();
+        private ConcurrentDictionary<string, Assembly> sTypeAssemblies = new ConcurrentDictionary<string, Assembly>();
 
-        public static void AddSearchPath(string path)
+        public void AddSearchPath(string path)
         {
             lock (sSearchPathLock)
             {
@@ -23,7 +23,7 @@ namespace CodeM.Common.Ioc
             }
         }
 
-        public static void RemoveSearchPath(string path)
+        public void RemoveSearchPath(string path)
         {
             lock (sSearchPathLock)
             {
@@ -31,7 +31,7 @@ namespace CodeM.Common.Ioc
             }
         }
 
-        private static bool HasType(Assembly assembly, string classFullName)
+        private bool HasType(Assembly assembly, string classFullName)
         {
             if (!assembly.IsDynamic)
             {
@@ -49,7 +49,7 @@ namespace CodeM.Common.Ioc
             return false;
         }
 
-        private static Assembly FindAssemblyInSearchPath(string classFullName)
+        private Assembly FindAssemblyInSearchPath(string classFullName)
         {
             List<string> searchDirs = new List<string>();
             searchDirs.Add(AppDomain.CurrentDomain.BaseDirectory);
@@ -88,7 +88,7 @@ namespace CodeM.Common.Ioc
             return null;
         }
 
-        private static Assembly GetAssemblyByClassFullName(string classFullName)
+        private Assembly GetAssemblyByClassFullName(string classFullName)
         {
             Assembly result = null;
             if (!sTypeAssemblies.TryGetValue(classFullName.ToLower(), out result))
@@ -111,7 +111,7 @@ namespace CodeM.Common.Ioc
             return result;
         }
 
-        public static Type GetType(string typeFullName)
+        public Type GetType(string typeFullName)
         {
             Assembly assembly = GetAssemblyByClassFullName(typeFullName);
             if (assembly == null)
@@ -125,7 +125,7 @@ namespace CodeM.Common.Ioc
             return null;
         }
 
-        public static object CreateInstance(string classFullName, bool ignoreCase = true)
+        public object CreateInstance(string classFullName, bool ignoreCase = true)
         {
             object result = null;
             Assembly assembly = GetAssemblyByClassFullName(classFullName);
@@ -140,7 +140,7 @@ namespace CodeM.Common.Ioc
             return result;
         }
 
-        public static object CreateInstance(string classFullName, object[] args = null)
+        public object CreateInstance(string classFullName, object[] args = null)
         {
             object result = null;
             Assembly assembly = GetAssemblyByClassFullName(classFullName);

@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace CodeM.Common.Ioc
 {
-    internal static class IocConfig
+    internal class IocConfig
     {
         //对象引用类型参数对象
         internal class RefObjectSetting
@@ -161,12 +161,19 @@ namespace CodeM.Common.Ioc
             }
         }
 
-        private static ConcurrentDictionary<string, ObjectConfig> sConfigs = new ConcurrentDictionary<string, ObjectConfig>();
+        private ConcurrentDictionary<string, ObjectConfig> sConfigs = new ConcurrentDictionary<string, ObjectConfig>();
 
         private static Regex sReInt = new Regex("^[0-9]*$", RegexOptions.None);
         private static Regex sReDouble = new Regex("^[0-9\\.]*$", RegexOptions.None);
 
-        private static void HandleListValue(IList list, string value, Type valueType, string xmlPath, int xmlLine)
+        private AssemblyManager mAssemblyManager;
+
+        internal IocConfig(AssemblyManager am)
+        {
+            mAssemblyManager = am;
+        }
+
+        private void HandleListValue(IList list, string value, Type valueType, string xmlPath, int xmlLine)
         {
             if (valueType != null)
             {
@@ -220,12 +227,12 @@ namespace CodeM.Common.Ioc
             };
         }
 
-        public static void LoadFile(string filePath, bool append = true)
+        public void LoadFile(string filePath, bool append = true)
         {
             LoadFile(filePath, "/objects/object", append);
         }
 
-        public static void LoadFile(string filPath, string objectPath, bool append = true)
+        public void LoadFile(string filPath, string objectPath, bool append = true)
         {
             if (!append)
             {
@@ -310,7 +317,7 @@ namespace CodeM.Common.Ioc
                                         else
                                         {
                                             //用户自定义类型
-                                            currentParamType = AssemblyUtils.GetType(typeName);
+                                            currentParamType = mAssemblyManager.GetType(typeName);
                                         }
                                     }
                                     else
@@ -384,7 +391,7 @@ namespace CodeM.Common.Ioc
                                     else
                                     {
                                         //用户自定义类型
-                                        currentParamType = AssemblyUtils.GetType(typeName);
+                                        currentParamType = mAssemblyManager.GetType(typeName);
                                         isUserType = !currentParamType.IsEnum;
                                     }
                                 }
@@ -507,7 +514,7 @@ namespace CodeM.Common.Ioc
             }
         }
 
-        public static ObjectConfig GetObjectConfig(string id)
+        public ObjectConfig GetObjectConfig(string id)
         {
             ObjectConfig result = null;
             sConfigs.TryGetValue(id.ToLower(), out result);

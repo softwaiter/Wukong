@@ -128,11 +128,7 @@ namespace CodeM.Common.Ioc
         public object CreateInstance(string classFullName, bool ignoreCase = true)
         {
             object result = null;
-            Assembly assembly = GetAssemblyByClassFullName(classFullName);
-            if (assembly == null)
-            {
-                assembly = FindAssemblyInSearchPath(classFullName);
-            }
+            Assembly assembly = GetAssembly(classFullName);
             if (assembly != null)
             {
                 result = assembly.CreateInstance(classFullName, ignoreCase);
@@ -143,11 +139,7 @@ namespace CodeM.Common.Ioc
         public object CreateInstance(string classFullName, object[] args = null)
         {
             object result = null;
-            Assembly assembly = GetAssemblyByClassFullName(classFullName);
-            if (assembly == null)
-            {
-                assembly = FindAssemblyInSearchPath(classFullName);
-            }
+            Assembly assembly = GetAssembly(classFullName);
             if (assembly != null)
             {
                 if (args == null || args.Length == 0)
@@ -160,6 +152,16 @@ namespace CodeM.Common.Ioc
                 }
             }
             return result;
+        }
+
+        public Assembly GetAssembly(string classFullName)
+        {
+            Assembly assembly = GetAssemblyByClassFullName(classFullName);
+            if (assembly == null)
+            {
+                assembly = FindAssemblyInSearchPath(classFullName);
+            }
+            return assembly;
         }
     }
 }

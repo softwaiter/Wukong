@@ -59,6 +59,16 @@ namespace CodeM.Common.Ioc
             mIocConfig.LoadFile(configFile, objectPath, append);
         }
 
+        public bool ExistsClass(string classFullName)
+        {
+            return mAssemblyManager.GetAssembly(classFullName) != null;
+        }
+
+        public bool ExistsConfig(string configId)
+        {
+            return mIocConfig.GetObjectConfig(configId) != null;
+        }
+
         private string GetSingleObjectKey(string classFullName, params object[] args)
         {
             StringBuilder sbResult = new StringBuilder(classFullName);

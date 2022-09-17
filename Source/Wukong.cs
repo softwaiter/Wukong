@@ -101,6 +101,16 @@ namespace CodeM.Common.Ioc
             return GetFactory(Assembly.GetCallingAssembly()).GetObjectById<T>(objectId);
         }
 
+        public static bool ExistsClass(string classFullName)
+        {
+            return GetFactory(Assembly.GetCallingAssembly()).ExistsClass(classFullName);
+        }
+
+        public static bool ExistsConfig(string configId)
+        {
+            return GetFactory(Assembly.GetCallingAssembly()).ExistsConfig(configId);
+        }
+
         public static object Invoke(object inst, string method, params object[] args)
         {
             List<Type> _typs = new List<Type>();

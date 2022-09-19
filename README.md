@@ -25,22 +25,22 @@
 ## :package: 依赖安装
 #### Package Manager
 ```shell
-Install-Package Wukong -Version 2.0.2
+Install-Package Wukong -Version 2.0.5
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package Wukong --version 2.0.2
+dotnet add package Wukong --version 2.0.5
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="Wukong" Version="2.0.2" />
+<PackageReference Include="Wukong" Version="2.0.5" />
 ```
 
 #### Paket CLI
 ```shell
-paket add Wukong --version 2.0.2
+paket add Wukong --version 2.0.5
 ```
 <br/>
 
@@ -51,12 +51,12 @@ Wukong为了方便调用，将所有功能统一封装集成到静态类Wukong�
 ###### 想成功的获取对象实例必须满足下面２个条件中的一个：
 
 - 对象所在的程序集被当前项目正常引用。
-- 对象所在的程序集必须在Wukong搜索路径范围内（可通过AddSearchPath方法添加搜索路径）。
+- 对象所在的程序集必须在Wukong搜索路径范围内（可通过`AddSearchPath`方法添加搜索路径）。
 
 ###### 同样，Wukong为获取对象实例也提供了２个途径：
 
 - 通过指定类全名称和构造参数生成对象实例（无需配置文件）
-- 通过指定配置文件中定义的对象Id生成对象实例（需配置文件中定义）
+- 通过指定配置文件中定义的对象Id生成对象实例（需在配置文件中定义，并通过`LoadConfig`方法加载）。
 
 <br/>
 
@@ -121,7 +121,36 @@ append: 是否使用添加模式，默认为true。
 Wukong.LoadConfig("c:\\obj.xml", "/processors/processor")
 ```
 
-### 五、根据类全名称获取对象实例
+### 五、判断当前搜索范围内是否有指定类对象
+
+#### 定义：
+
+public static bool ExistsClass(string classFullName)
+
+#### 参数：
+
+classFullName: 类全名称。
+
+#### 返回：
+
+存在返回True；否则，返回False。
+
+### 六、判断已加载对象配置文件中，是否存在指定Id的配置对象
+
+#### 定义：
+
+public static bool ExistsConfig(string configId)
+
+#### 参数：
+
+configId: 配置对象Id。
+
+#### 返回：
+
+存在返回True；否则，返回False。
+
+### 七、根据类全名称获取对象实例
+
 #### 定义：
 public static object GetObject(string classFullName, params object[] args)
 #### 参数：
@@ -132,7 +161,7 @@ args: 对象构造参数数组。
 #### 返回：
 生成的对象实例。<br/>
 
-### 六、根据类全名称获取指定类型的对象实例
+### 八、根据类全名称获取指定类型的对象实例
 #### 定义：
 public static T GetObject&lt;T&gt;(string classFullName, params object[] args)
 #### 参数：
@@ -143,7 +172,7 @@ args: 对象构造参数数组。
 #### 返回：
 指定类型的对象实例。<br/>
 
-### 七、以单例模式根据类全名称获取对象实例
+### 九、以单例模式根据类全名称获取对象实例
 #### 定义：
 public static object GetSingleObject(string classFullName, params object[] args)
 #### 参数：
@@ -154,7 +183,7 @@ args: 对象构造参数数组。
 #### 返回：
 生成的对象实例，相同构造参数多次调用返回同一实例。<br/>
 
-### 八、以单例模式根据类全名称获取指定类型的对象实例
+### 十、以单例模式根据类全名称获取指定类型的对象实例
 #### 定义：
 public static T GetSingleObject&lt;T&gt;(string classFullName, params object[] args)
 #### 参数：
@@ -165,7 +194,7 @@ args: 对象构造参数数组。
 #### 返回：
 指定类型的对象实例，相同构造参数多次调用返回同一实例。<br/>
 
-### 九、根据配置文件Id获取对象实例
+### 十一、根据配置文件Id获取对象实例
 #### 定义：
 public static object GetObjectById(string objectId)
 #### 参数：
@@ -173,7 +202,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 生成的对象实例。<br/>
 
-### 十、根据配置文件Id获取指定类型对象实例
+### 十二、根据配置文件Id获取指定类型对象实例
 #### 定义：
 public static T GetObjectById&lt;T&gt;(string objectId)
 #### 参数：
@@ -181,7 +210,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 指定类型的对象实例。<br/>
 
-### 十一、以单例模式根据配置文件Id获取对象实例
+### 十三、以单例模式根据配置文件Id获取对象实例
 #### 定义：
 public static object GetSingleObjectById(string objectId)
 #### 参数：
@@ -189,7 +218,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 对象实例，多次调用返回同一实例。<br/>
 
-### 十二、以单例模式根据配置文件Id获取指定类型的对象实例
+### 十四、以单例模式根据配置文件Id获取指定类型的对象实例
 #### 定义：
 public static T GetSingleObjectById&lt;T&gt;(string objectId)
 #### 参数：
@@ -197,7 +226,7 @@ objectId: 配置文件中对象Id
 #### 返回：
 指定类型的对象实例，多次调用返回同一实例。<br/>
 
-### 十三、执行指定对象的指定方法，并获取返回值
+### 十五、执行指定对象的指定方法，并获取返回值
 
 #### 定义：
 
@@ -215,7 +244,7 @@ args: 要执行方法所需要的参数，可选。
 
 执行方法后得到的返回值。
 
-### 十四、执行指定对象的指定方法，并获取指定类型的返回值
+### 十六、执行指定对象的指定方法，并获取指定类型的返回值
 
 #### 定义：
 

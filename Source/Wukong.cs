@@ -19,6 +19,14 @@ namespace CodeM.Common.Ioc
         }
 
         /// <summary>
+        /// 清除配置文件和单例对象实例的缓存
+        /// </summary>
+        public static void ClearCache()
+        {
+            GetFactory(Assembly.GetCallingAssembly()).ClearCache();
+        }
+
+        /// <summary>
         /// 添加程序集搜索位置
         /// </summary>
         public static void AddSearchPath(string path)

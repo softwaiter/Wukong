@@ -173,6 +173,8 @@ namespace CodeM.Common.Ioc
             mAssemblyManager = am;
         }
 
+        internal AssemblyManager AssemblyManager { get; set; }
+
         private void HandleListValue(IList list, string value, Type valueType, string xmlPath, int xmlLine)
         {
             if (valueType != null)

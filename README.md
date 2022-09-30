@@ -31,22 +31,22 @@
 ## :package: 依赖安装
 #### Package Manager
 ```shell
-Install-Package Wukong -Version 2.0.5
+Install-Package Wukong -Version 2.0.6
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package Wukong --version 2.0.5
+dotnet add package Wukong --version 2.0.6
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="Wukong" Version="2.0.5" />
+<PackageReference Include="Wukong" Version="2.0.6" />
 ```
 
 #### Paket CLI
 ```shell
-paket add Wukong --version 2.0.5
+paket add Wukong --version 2.0.6
 ```
 <br/>
 
@@ -62,7 +62,13 @@ Wukong为了方便调用，将所有功能统一封装集成到静态类Wukong�
 ###### 同样，Wukong为获取对象实例也提供了２个途径：
 
 - 通过指定类全名称和构造参数生成对象实例（无需配置文件）
+
 - 通过指定配置文件中定义的对象Id生成对象实例（需在配置文件中定义，并通过`LoadConfig`方法加载）。
+
+
+
+##### 注意：
+Wukong对加载的配置文件和单实例对象的缓存以调用程序集为特征进行隔离，不同程序集之间不进行共享。
 
 <br/>
 
@@ -269,6 +275,20 @@ args: 要执行方法所需要的参数，可选。
 #### 返回：
 
 执行方法后得到的返回值。
+
+### 十七、清除缓存
+
+#### 定义：
+
+public static void ClearCache()
+
+#### 参数：
+
+无。
+
+#### 返回：
+
+无。
 
 <br/>
 

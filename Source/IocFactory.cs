@@ -325,5 +325,12 @@ namespace CodeM.Common.Ioc
             SetProperties(item, result);
             return result;
         }
+
+        public void ClearCache()
+        {
+            mAssemblyManager = new AssemblyManager();
+            mIocConfig.AssemblyManager = mAssemblyManager;
+            mSingleInstances.Clear();
+        }
     }
 }

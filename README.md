@@ -31,22 +31,22 @@
 ## :package: 依赖安装
 #### Package Manager
 ```shell
-Install-Package Wukong -Version 2.0.12
+Install-Package Wukong -Version 2.0.13
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package Wukong --version 2.0.12
+dotnet add package Wukong --version 2.0.13
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="Wukong" Version="2.0.12" />
+<PackageReference Include="Wukong" Version="2.0.13" />
 ```
 
 #### Paket CLI
 ```shell
-paket add Wukong --version 2.0.12
+paket add Wukong --version 2.0.13
 ```
 <br/>
 

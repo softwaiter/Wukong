@@ -5,7 +5,7 @@
     <Version>3.0.0</Version>
     <Authors>softwaiter</Authors>
     <Company>softwaiter</Company>
-    <Description>基于.NetCore实现的轻量级IoC容器工具类库</Description>
+    <Description>基于.Net实现的轻量级IoC容器工具类库</Description>
     <PackageProjectUrl>https://github.com/softwaiter/Wukong</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyName>Wukong</AssemblyName>

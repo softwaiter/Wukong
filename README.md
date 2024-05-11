@@ -28,25 +28,32 @@
 
 <br/>
 
+## :rocket: 版本
+**.NetCore3.1**：3.0.0之前的版本全部基于netcore3.1开发。
+<br/>
+**.Net8.0**：从3.0.0开始，项目全部基于net8.0开发。
+
+<br/>
+
 ## :package: 依赖安装
 #### Package Manager
 ```shell
-Install-Package Wukong -Version 2.0.13
+Install-Package Wukong -Version 3.0.0
 ```
 
 #### .NET CLI
 ```shell
-dotnet add package Wukong --version 2.0.13
+dotnet add package Wukong --version 3.0.0
 ```
 
 #### PackageReference
 ```xml
-<PackageReference Include="Wukong" Version="2.0.13" />
+<PackageReference Include="Wukong" Version="3.0.0" />
 ```
 
 #### Paket CLI
 ```shell
-paket add Wukong --version 2.0.13
+paket add Wukong --version 3.0.0
 ```
 <br/>
 

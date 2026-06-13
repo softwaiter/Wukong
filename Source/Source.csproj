@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <Authors>softwaiter</Authors>
     <Company>softwaiter</Company>
     <Description>基于.Net实现的轻量级IoC容器工具类库</Description>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xmtool" Version="3.0.0" />
+    <PackageReference Include="Xmtool" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
